@@ -1,0 +1,73 @@
+# Japan Disaster Prep Check
+
+> Free, unofficial household checklist for the emergency request (事前防災徹底のための緊急要請) issued by Japan's Disaster Management Agency (防災庁) on 2026-11-02, the day it launched. Five points: 1 耐震診断 for homes built 昭和56年 (1981) or earlier, plus furniture fixing; 2 stock water, food and portable toilets for at least 3 days, ideally 1 week (drinking water 3 L per person per day incl. cooking); 3 hazard maps, evacuation site and route; 4 grab bag (非常持ち出し品); 5 local disaster drill. Computes the household amounts (water 3 L, 3 meals, 5 portable-toilet uses per person per day), the gap against what you have, the building era (旧耐震 = 建築確認 before 1981-06-01) and the to-do list. Rules as of 2026-11-02. Educational, not official and not engineering or safety advice; not affiliated with 防災庁, the Cabinet Office, MLIT, MAFF, the Ministry of the Environment or any city. It doesn't inspect buildings or predict disasters.
+
+Site: https://japan-disaster-prep.vercel.app
+
+## Key facts (official sources below)
+- The request (防災大臣 細野豪志, 2026-11-02) is a standing call to prepare for 国難級 disasters (Kuril / Japan Trench quakes, Tokyo inland quake, Nankai Trough, Mt Fuji eruption). The minister said on 2026-10-30 it is not based on any disaster or war prediction.
+- Stockpile: at least 3 days, ideally 1 week. Drinking water 3 L per person per day including cooking (request text; PM's Office). Water for flushing and washing is separate (fill the bath, keep a tank).
+- Portable toilets: 5 uses per person per day → 35 per person per week; family of 4 → 140 per week (防災庁 広報ぼうさい, METI). Only about 20% of households stock them.
+- Also tissues, toilet paper and daily goods; rolling stock (ローリングストック): buy a bit extra of what you use and replace it.
+- Building: 建築確認 before 1981-06-01 = old quake standard (旧耐震) → 耐震診断 (city subsidies widely available); if a full retrofit is too costly, make at least the bedroom / living room safe. Wooden post-and-beam houses permitted 1981-06-01 – 2000-05-31 → MLIT 新耐震木造住宅検証法 owner self-check. Renters → ask the landlord / 管理会社.
+- Furniture: assume unfixed furniture will fall; fix it, keep tall furniture out of bedrooms and away from exits.
+- Pets: food and water at least 5 days, ideally 7+ (Ministry of the Environment).
+- Hazard maps: 重ねるハザードマップ / わがまちハザードマップ at disaportal.gsi.go.jp; 揺れやすさマップ and 津波ハザードマップ from your city.
+
+## API (free, no key, CORS open)
+
+### GET
+GET https://japan-disaster-prep.vercel.app/api/check?adults=2&children=2&days=7&builtYear=1979&buildingType=wood
+→ verdict "not_prepared", summary "0 of 5 done. For 4 people, 7 days: 84 L water (42 × 2 L), 84 meals, 140 toilet uses. Get a 耐震診断.", stockpile {water {target 84, minimum3Days 36, have null, gap null, bottles2L 42}, meals {target 84}, toiletUses {target 140}, pets, alsoStock[], rollingStock}, building {era "old_standard", action}, request [{n, title, ja, status done|partial|todo, todo[]} ×5], links, note, sources, disclaimer
+
+### POST
+POST https://japan-disaster-prep.vercel.app/api/check
+{"adults":1,"days":3,"haveWaterLiters":9,"haveMeals":9,"haveToiletUses":15,"builtYear":"平成24","furnitureFixed":true,"hazardMapChecked":true,"evacuationRouteChecked":true,"goBagReady":true,"drillJoined":true}
+→ verdict "well_prepared", doneCount 5
+
+Parameters: adults (default 1), children, infants (water only; milk and diapers listed), elderly, dogs, cats, days (1–30, default 7), haveWaterLiters, haveMeals, haveToiletUses, builtYear (1979, 昭和54, S54, 平成12, H12), permitDate (YYYY-MM-DD 建築確認日), buildingType (wood | non_wood | unknown; 木造, マンション…), tenure (own | rent; 持ち家, 賃貸), seismicDone, furnitureFixed, hazardMapChecked, evacuationRouteChecked, goBagReady, drillJoined.
+
+Verdicts: well_prepared (all 5 done) | partly_prepared | not_prepared. Building eras: old_standard | likely_old (built 1981, check the permit date) | new_pre2000_wood | new_standard | unknown.
+
+Bad input → 400 {error, docs, example, disclaimer}: no people, days outside 1–30, unreadable year, invalid date or enum, non-boolean flags, negative amounts.
+
+### Other endpoints
+- GET https://japan-disaster-prep.vercel.app/api/rules
+- https://japan-disaster-prep.vercel.app/openapi.json
+- https://japan-disaster-prep.vercel.app/.well-known/ai-plugin.json
+- MCP: tool japan_disaster_prep_check on https://free-agent-tools.vercel.app/mcp
+
+## Sources
+- https://www.sankei.com/article/20261102-5DZVTGGLPVEU7EJWILSJU4TAWM/ (full text of the 緊急要請, Sankei)
+- https://www.fnn.jp/articles/-/1144215 (full text of the 緊急要請, FNN)
+- https://www.kantei.go.jp/jp/headline/bousai/sonae.html (PM's Office: 災害への備え, water 3 L / person / day)
+- https://www.bousai.go.jp/kohou/kouhoubousai/r06/111/news_08.html (防災庁 広報ぼうさい: toilet stock 5 uses / day, 35 / week)
+- https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_fr_000043.html (MLIT: 住宅・建築物の耐震化, 昭和56年以前 = 旧耐震)
+- https://www.mlit.go.jp/report/press/house05_hh_000662.html (MLIT: 新耐震木造住宅検証法, wooden 1981-06 – 2000-05)
+- https://www.env.go.jp/nature/dobutsu/aigo/2_data/pamph/h3009a/a-1b.pdf (MoE: pets, 5+ days, ideally 7+)
+- https://www.maff.go.jp/j/zyukyu/foodstock/ (MAFF: 家庭備蓄ポータル)
+- https://disaportal.gsi.go.jp/ (MLIT / GSI hazard map portal)
+- https://www.bichiku.metro.tokyo.lg.jp/ (Tokyo Stockpile Navi)
+
+## Other free tools by the same maker
+- Japan Leaving Tax Check (住民税 and 納税管理人 when leaving Japan): https://japan-leaving-tax.vercel.app
+- Japan Pet Quarantine Check (dogs and cats into / out of Japan, 180-day wait, 2027 export rule): https://japan-pet-quarantine.vercel.app
+- Japan Re-entry Deadline Check (last day to be back in Japan: deemed re-entry, re-entry permit, renewal-pending special period): https://japan-reentry-check.vercel.app
+- Japan Customs Allowance Checker (duty-free allowance on arrival, duty estimate, cash declaration): https://japan-customs-allowance.vercel.app
+- Japan Luggage Check (Shinkansen oversized-baggage rule + luggage forwarding cost): https://japan-luggage.vercel.app
+- Japan My Number Card Expiry Check (foreign residents' card ends with the period of stay): https://japan-mynumber-card-check.vercel.app
+- Japan Visa Fee Calculator (residence permit fees from 2026-10-01): https://japan-visa-fee.vercel.app
+- Japan PR Guideline Check (permanent residence guideline revised 2026-10-01): https://japan-pr-check.vercel.app
+- Japan HSP Points Calculator (Highly Skilled Professional visa points, 70 / 80): https://japan-hsp-points.vercel.app
+- Japan Overseas Dependents Check (国外居住親族 dependent deduction): https://japan-overseas-dependents.vercel.app
+- Japan Part-time Work Check (資格外活動許可, 28-hour rule): https://japan-parttime-check.vercel.app
+- Japan Driving Check (foreign licence, IDP, 外免切替): https://japan-driving-check.vercel.app
+- Japan International Postage 2027 (Japan Post prices now vs from 2027-02-01): https://japan-intl-postage.vercel.app
+- Japan Tax-Free Refund Checker (refund-method tax-free shopping from 2026-11-01): https://japan-tax-free-refund.vercel.app
+- Japan TB Screening Check (JPETS TB clearance for COE / visa): https://japan-tb-screening.vercel.app
+- Japan Alert Decoder (Japanese emergency alerts explained): https://japan-alert-decoder.vercel.app
+- Japan Dual Pricing Check (resident vs non-resident prices): https://japan-dual-pricing.vercel.app
+- Kyushu Travel Discount Calculator (九州ふっこう応援割): https://kyushu-travel-discount.vercel.app
+- House Rules Check (Airbnb house rules from 2026-11-20): https://house-rules-check.vercel.app
+- Japan Trip Brain (Japan trip planner): https://japan-trip-brain.vercel.app
+- Free Agent Tools MCP (all these tools as one MCP server): https://free-agent-tools.vercel.app

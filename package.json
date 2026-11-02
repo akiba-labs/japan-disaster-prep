@@ -1,0 +1,31 @@
+{
+  "name": "japan-disaster-prep",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Free checker for Japan's 防災庁 emergency request (事前防災徹底のための緊急要請, 2026-11-02): household water, food and portable-toilet stockpile for 3 or 7 days, old quake standard (旧耐震) check, and the 5-item to-do list. Keyless JSON API + MCP.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "node --import tsx --test lib/prep.test.ts lib/api.test.ts lib/share.test.ts"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "next": "^16.3.5",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^16.3.5",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}
