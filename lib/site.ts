@@ -9,6 +9,7 @@ export const HONESTY =
   "Rules as of 2026-11-02 from the 防災大臣's 緊急要請 text, the PM's Office 災害への備え page, 防災庁 / METI portable-toilet guidance, MLIT seismic pages and the MoE pet disaster pamphlet. Amounts are the official per-person rules of thumb (water 3 L, 3 meals, 5 toilet uses a day), not a guarantee of what you'll need.";
 
 export const SIBLING_TOOLS = [
+  { href: "https://japan-lost-item.vercel.app", label: "Japan Lost Item Check" },
   { href: "https://japan-leaving-tax.vercel.app", label: "Japan Leaving Tax Check" },
   { href: "https://japan-alert-decoder.vercel.app", label: "Japan Alert Decoder" },
   { href: "https://japan-pet-quarantine.vercel.app", label: "Japan Pet Quarantine Check" },

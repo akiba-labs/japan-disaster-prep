@@ -50,6 +50,7 @@ Bad input → 400 {error, docs, example, disclaimer}: no people, days outside 1�
 - https://www.bichiku.metro.tokyo.lg.jp/ (Tokyo Stockpile Navi)
 
 ## Other free tools by the same maker
+- Japan Lost Item Check (lost wallet, phone or residence card in Japan: who to contact, 遺失物法 hold periods, 14-day reissue): https://japan-lost-item.vercel.app
 - Japan Leaving Tax Check (住民税 and 納税管理人 when leaving Japan): https://japan-leaving-tax.vercel.app
 - Japan Pet Quarantine Check (dogs and cats into / out of Japan, 180-day wait, 2027 export rule): https://japan-pet-quarantine.vercel.app
 - Japan Re-entry Deadline Check (last day to be back in Japan: deemed re-entry, re-entry permit, renewal-pending special period): https://japan-reentry-check.vercel.app
