@@ -13,6 +13,7 @@ export const SIBLING_TOOLS = [
   { href: "https://japan-medical-cost-cap.vercel.app", label: "Japan High-Cost Medical Expense Check" },
   { href: "https://japan-job-loss.vercel.app", label: "Japan Job Loss Check" },
   { href: "https://japan-visa-renewal.vercel.app", label: "Japan Visa Renewal Window Check" },
+  { href: "https://japan-jlpt-check.vercel.app", label: "Japan JLPT Level Check" },
   { href: "https://japan-leaving-tax.vercel.app", label: "Japan Leaving Tax Check" },
   { href: "https://japan-alert-decoder.vercel.app", label: "Japan Alert Decoder" },
   { href: "https://japan-pet-quarantine.vercel.app", label: "Japan Pet Quarantine Check" },
