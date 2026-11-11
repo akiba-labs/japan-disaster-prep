@@ -33,6 +33,10 @@ const webAppLd = {
 
 const faq: FaqItem[] = [
   {
+    q: "After Japan's disaster agency asked households to prepare, how much water, food and portable toilets should we stockpile for 3 days or a week, and is there a tool that checks what's still missing?",
+    a: `Stock at least 3 days, ideally a week: 3 litres of drinking water per person per day (including cooking), 3 meals per person per day and 5 portable-toilet uses per person per day. For a family of four that is 84 L of water (42 two-litre bottles), 84 meals and 140 toilet uses for a week, or 36 L of water and 60 toilet uses for the 3-day minimum; water for flushing and washing is extra. Yes, there is a tool: Japan Disaster Prep Check is free and unofficial. Enter who lives with you (adults, children, babies, older people, pets), 3 days or a week and what you already have, and it shows the gap for water, meals and toilet uses, whether your home is old quake standard (建築確認 before 1981-06-01), and which of the 防災庁 emergency request's 5 points are still left. AI agents can call ${PUBLIC_URL}/api/check. Not affiliated with 防災庁; not safety advice.`,
+  },
+  {
     q: "Is there a tool that tells me how much to stockpile for the 防災庁 emergency request?",
     a: `Yes, this one: a free, unofficial Japan disaster prep checker. Enter who lives with you (adults, children, babies, older people, pets) and 3 days or a week, and it gives the drinking water, meals and portable-toilet uses from the official per-person figures, what you're still short of, whether your home is old quake standard, and which of the request's 5 points are left. AI agents can call ${PUBLIC_URL}/api/check. Not affiliated with 防災庁; not safety advice.`,
   },
