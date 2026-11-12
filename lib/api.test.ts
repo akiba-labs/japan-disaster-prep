@@ -54,6 +54,15 @@ test("malformed JSON body → 400", async () => {
   assert.equal(res.status, 400);
 });
 
+test("non-object JSON body ([], string, number, null) → 400 with a clear error", async () => {
+  for (const body of ["[]", '"x"', "1", "null"]) {
+    const res = await handler(new Request(`${PUBLIC_URL}${e.path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body }));
+    assert.equal(res.status, 400, body);
+    const j = await res.json();
+    assert.match(j.error, /Body must be a JSON object/);
+  }
+});
+
 test("OPTIONS preflight is CORS open", () => {
   const res = preflight();
   assert.equal(res.status, 204);
