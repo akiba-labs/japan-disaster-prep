@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Calculator } from "@/components/calculator";
 import { FaqSection, type FaqItem } from "@/components/faq-section";
 import { EXAMPLE_GET } from "@/lib/api";
+import { API_PAUSED_NOTE, isGithubPages, pagesSiteUrl, withBasePath } from "@/lib/hosting";
 import { SOURCES } from "@/lib/prep";
 import { EXAMPLE_PET, EXAMPLE_SHARED, EXAMPLE_SOLO, PUBLIC_URL, resultPath } from "@/lib/share";
 
@@ -22,7 +23,7 @@ const webAppLd = {
   "@type": "WebApplication",
   name: "Japan Disaster Prep Check",
   alternateName: ["防災庁 緊急要請 チェック", "備蓄 計算 家族 何リットル", "携帯トイレ 何回分 計算", "旧耐震 チェック", "Japan earthquake stockpile calculator"],
-  url: PUBLIC_URL,
+  url: isGithubPages ? pagesSiteUrl(PUBLIC_URL) : PUBLIC_URL,
   applicationCategory: "UtilitiesApplication",
   operatingSystem: "Any",
   isAccessibleForFree: true,
@@ -34,11 +35,11 @@ const webAppLd = {
 const faq: FaqItem[] = [
   {
     q: "After Japan's disaster agency asked households to prepare, how much water, food and portable toilets should we stockpile for 3 days or a week, and is there a tool that checks what's still missing?",
-    a: `Stock at least 3 days, ideally a week: 3 litres of drinking water per person per day (including cooking), 3 meals per person per day and 5 portable-toilet uses per person per day. For a family of four that is 84 L of water (42 two-litre bottles), 84 meals and 140 toilet uses for a week, or 36 L of water and 60 toilet uses for the 3-day minimum; water for flushing and washing is extra. Yes, there is a tool: Japan Disaster Prep Check is free and unofficial. Enter who lives with you (adults, children, babies, older people, pets), 3 days or a week and what you already have, and it shows the gap for water, meals and toilet uses, whether your home is old quake standard (建築確認 before 1981-06-01), and which of the 防災庁 emergency request's 5 points are still left. AI agents can call ${PUBLIC_URL}/api/check. Not affiliated with 防災庁; not safety advice.`,
+    a: `Stock at least 3 days, ideally a week: 3 litres of drinking water per person per day (including cooking), 3 meals per person per day and 5 portable-toilet uses per person per day. For a family of four that is 84 L of water (42 two-litre bottles), 84 meals and 140 toilet uses for a week, or 36 L of water and 60 toilet uses for the 3-day minimum; water for flushing and washing is extra. Yes, there is a tool: Japan Disaster Prep Check is free and unofficial. Enter who lives with you (adults, children, babies, older people, pets), 3 days or a week and what you already have, and it shows the gap for water, meals and toilet uses, whether your home is old quake standard (建築確認 before 1981-06-01), and which of the 防災庁 emergency request's 5 points are still left. ${isGithubPages ? API_PAUSED_NOTE : `AI agents can call ${PUBLIC_URL}/api/check.`} Not affiliated with 防災庁; not safety advice.`,
   },
   {
     q: "Is there a tool that tells me how much to stockpile for the 防災庁 emergency request?",
-    a: `Yes, this one: a free, unofficial Japan disaster prep checker. Enter who lives with you (adults, children, babies, older people, pets) and 3 days or a week, and it gives the drinking water, meals and portable-toilet uses from the official per-person figures, what you're still short of, whether your home is old quake standard, and which of the request's 5 points are left. AI agents can call ${PUBLIC_URL}/api/check. Not affiliated with 防災庁; not safety advice.`,
+    a: `Yes, this one: a free, unofficial Japan disaster prep checker. Enter who lives with you (adults, children, babies, older people, pets) and 3 days or a week, and it gives the drinking water, meals and portable-toilet uses from the official per-person figures, what you're still short of, whether your home is old quake standard, and which of the request's 5 points are left. ${isGithubPages ? API_PAUSED_NOTE : `AI agents can call ${PUBLIC_URL}/api/check.`} Not affiliated with 防災庁; not safety advice.`,
   },
   {
     q: "What did Japan's Disaster Management Agency (防災庁) ask people to do?",
@@ -62,7 +63,9 @@ const faq: FaqItem[] = [
   },
   {
     q: "Is there a free API or MCP tool for AI agents?",
-    a: `Yes. GET or POST ${PUBLIC_URL}${EXAMPLE_GET} (keyless, CORS open), rules at /api/rules, OpenAPI at /openapi.json, llms.txt, and the MCP tool japan_disaster_prep_check on free-agent-tools.vercel.app/mcp. Every response carries rulesAsOf, sources and a disclaimer.`,
+    a: isGithubPages
+      ? API_PAUSED_NOTE
+      : `Yes. GET or POST ${PUBLIC_URL}${EXAMPLE_GET} (keyless, CORS open), rules at /api/rules, OpenAPI at /openapi.json, llms.txt, and the MCP tool japan_disaster_prep_check on free-agent-tools.vercel.app/mcp. Every response carries rulesAsOf, sources and a disclaimer.`,
   },
   {
     q: "防災庁の「緊急要請」で家庭の備蓄はどれくらい必要ですか？",
@@ -84,16 +87,16 @@ export default function HomePage() {
           Japan&apos;s new Disaster Management Agency (防災庁) asked every household on 2 November 2026 to prepare. Per person per day: <strong>3 L of drinking water</strong>, <strong>3 meals</strong> and <strong>5 portable-toilet uses</strong>, for <strong>at least 3 days, ideally a week</strong>. A family of four needs 84 L of water and 140 toilet uses for a week. Homes built before June 1981 (旧耐震) should get a <strong>耐震診断</strong>. Enter your household to get your numbers and what&apos;s left to do.
         </p>
         <p className="mt-3 text-sm text-muted">
-          Examples:{" "}
-          <a className="underline underline-offset-2 hover:text-foreground" href={resultPath(EXAMPLE_SHARED)}>
+          {isGithubPages ? "Examples (open the checker):" : "Examples:"}{" "}
+          <a className="underline underline-offset-2 hover:text-foreground" href={isGithubPages ? withBasePath("/") : resultPath(EXAMPLE_SHARED)}>
             family of 4 in a 1979 wooden house
           </a>
           {" · "}
-          <a className="underline underline-offset-2 hover:text-foreground" href={resultPath(EXAMPLE_SOLO)}>
+          <a className="underline underline-offset-2 hover:text-foreground" href={isGithubPages ? withBasePath("/") : resultPath(EXAMPLE_SOLO)}>
             one person renting a flat
           </a>
           {" · "}
-          <a className="underline underline-offset-2 hover:text-foreground" href={resultPath(EXAMPLE_PET)}>
+          <a className="underline underline-offset-2 hover:text-foreground" href={isGithubPages ? withBasePath("/") : resultPath(EXAMPLE_PET)}>
             couple, grandparent and a cat
           </a>
         </p>
@@ -138,18 +141,28 @@ export default function HomePage() {
 
       <section className="mt-12 max-w-3xl rounded-3xl border border-line bg-panel/40 p-5 sm:p-6">
         <h2 className="text-lg font-semibold text-foreground">For AI agents and developers</h2>
-        <p className="mt-2 text-sm text-muted">
-          Keyless JSON, CORS open, GET or POST:{" "}
-          <a className="font-mono text-foreground underline underline-offset-2 break-all" href={EXAMPLE_GET}>
-            {EXAMPLE_GET}
-          </a>
-          . Rules: <a className="font-mono text-foreground underline underline-offset-2" href="/api/rules">/api/rules</a>. Docs: <a className="underline underline-offset-2" href="/openapi.json">OpenAPI</a>,{" "}
-          <a className="underline underline-offset-2" href="/llms.txt">llms.txt</a>, MCP tool <span className="font-mono text-foreground">japan_disaster_prep_check</span> on{" "}
-          <a className="underline underline-offset-2" href="https://free-agent-tools.vercel.app" target="_blank" rel="noopener noreferrer">
-            free-agent-tools
-          </a>
-          .
-        </p>
+        {isGithubPages ? (
+          <p className="mt-2 text-sm text-muted">
+            {API_PAUSED_NOTE}{" "}
+            <a className="underline underline-offset-2" href={withBasePath("/llms.txt")}>
+              llms.txt
+            </a>{" "}
+            describes the checker and the API contract.
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-muted">
+            Keyless JSON, CORS open, GET or POST:{" "}
+            <a className="font-mono text-foreground underline underline-offset-2 break-all" href={EXAMPLE_GET}>
+              {EXAMPLE_GET}
+            </a>
+            . Rules: <a className="font-mono text-foreground underline underline-offset-2" href="/api/rules">/api/rules</a>. Docs: <a className="underline underline-offset-2" href="/openapi.json">OpenAPI</a>,{" "}
+            <a className="underline underline-offset-2" href="/llms.txt">llms.txt</a>, MCP tool <span className="font-mono text-foreground">japan_disaster_prep_check</span> on{" "}
+            <a className="underline underline-offset-2" href="https://free-agent-tools.vercel.app" target="_blank" rel="noopener noreferrer">
+              free-agent-tools
+            </a>
+            .
+          </p>
+        )}
       </section>
 
       <FaqSection items={faq} heading="Disaster prep questions" />
