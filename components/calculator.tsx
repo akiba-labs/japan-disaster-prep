@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CardDisclaimer } from "@/components/card-disclaimer";
 import { ShareBar } from "@/components/share-bar";
+import { isGithubPages, pagesSiteUrl } from "@/lib/hosting";
 import type { BuildingType, Tenure } from "@/lib/prep";
 import { EXAMPLE_SHARED, PUBLIC_URL, resultPath, safeCheck, type Shared } from "@/lib/share";
 import { STATUS_LABEL, STATUS_STYLE, VERDICT_LABEL, VERDICT_STYLE } from "@/lib/verdict";
@@ -39,7 +40,7 @@ export function Calculator({ initial }: { initial?: Shared }) {
   const set = <K extends keyof Shared>(k: K) => (v: Shared[K]) => setS((p) => ({ ...p, [k]: v }));
   const persons = s.adults + s.children + s.infants + s.elderly;
   const r = persons > 0 ? safeCheck(s) : null;
-  const shareUrl = `${PUBLIC_URL}${resultPath(s)}`;
+  const shareUrl = isGithubPages ? `${pagesSiteUrl(PUBLIC_URL)}/` : `${PUBLIC_URL}${resultPath(s)}`;
   const year = s.builtYear === null ? "" : String(s.builtYear);
 
   return (
@@ -169,6 +170,9 @@ export function Calculator({ initial }: { initial?: Shared }) {
               </p>
               <p className="mt-3 text-xs text-muted">{r.note}</p>
               <div className="mt-6">
+                {isGithubPages ? (
+                  <p className="mb-3 text-xs text-muted">Share the checker. A link to this exact result returns when hosting is back.</p>
+                ) : null}
                 <ShareBar url={shareUrl} text={`My 防災 check: ${r.summary}`} />
               </div>
             </>
